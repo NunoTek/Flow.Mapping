@@ -42,6 +42,18 @@ public class ExtractFileNameFromUriResolver : IFlowValueResolver
             }
         }
 
+        if (context.ValueResolverArguments != null && context.ValueResolverArguments.Any())
+        {
+            foreach (var resolver in context.ValueResolverArguments)
+            {
+                if (resolver.Name == "fileNameArg" && !string.IsNullOrEmpty(resolver.Value))
+                {
+                    var queryParams = HttpUtility.ParseQueryString(uri.Query);
+                    return queryParams[resolver.Value];
+                }
+            }
+        }
+
         var fileName = text;
         if (uri != null && !string.IsNullOrEmpty(uri.AbsolutePath))
         {
